@@ -1,11 +1,5 @@
-const mongoose = require('mongoose');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://MoisesPH:jpctTumxjsMcwi76@myclustter.1zxpbln.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-const URL = 'mongodb://localhost:27017/chat';
-
-mongoose.connect(URL).then(() => {
-    console.log('Connected to MongoDB');
-}).catch(err => {
-    console.log(err);
-});
-
-module.exports = mongoose;
+module.exports = client;

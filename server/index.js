@@ -5,7 +5,7 @@ const session = require('express-session');
 
 const morgan = require('morgan');
 
-const { mongoose } = require('./database');
+const client = require('./database');
 
 const SocketIO = require('socket.io');
 
@@ -21,6 +21,10 @@ app.use(express.json());
 app.set('port', process.env.PORT || 4000);
 
 const server = app.listen(app.get('port'), () => {
+    client.connect(err => {
+        if (err) throw err;
+        console.log('Connected to MongoDB');
+    })
     console.log('Server on port', app.get('port'));
 });
 

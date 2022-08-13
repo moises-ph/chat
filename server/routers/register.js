@@ -1,20 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const client = require('../database');
 
 const User = require('../models/userModel');
 
-router.post('/', (req,res)=>{
+router.post('/', async (req,res)=>{
     const { user, password, userName, phone, description } = req.body;
     const userP = user;
     const passwordCrypt = bcrypt.hashSync(password, 10);
-    User.findOne({user: user}, (err,user)=>{
-        if(err){
-            res.status(500).send({
-                status: 'error',
-                message: 'Error en la peticion'});
-        }else{
-            if(!user){
+    client.connect(err => {
+        if (err) throw err;
+        const collection = client.db("chat").collection("users");
+        collection.findOne({user: userP}, async (err, result) => {
+            if (err) throw err;
+            if(result){
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'El usuario ya existe'
+                });
+            }
+            else{
                 const newUser = new User({
                     user: userP,
                     password: passwordCrypt,
@@ -22,31 +28,15 @@ router.post('/', (req,res)=>{
                     phone: phone,
                     description: description
                 });
-                newUser.save((err,userStored)=>{
-                    if(err){
-                        console.log(err);
-                        res.status(500).send({
-                            status: 'error',
-                            message: 'Error al guardar el usuario'});
-                    }else{
-                        if(!userStored){
-                            res.status(404).send({
-                                status: 'error',
-                                message: 'No se ha registrado el usuario'});
-                        }else{
-                            res.status(200).send({
-                                status: 'success',
-                                message: 'Usuario registrado correctamente'});
-                        }
-                    }
-                });
-            }else{
-                res.status(200).send({
-                    status: 'error',
-                    message: 'Ya existe un usuario con ese correo'});
+                await collection.insertOne(newUser).then(result => {
+                    return res.status(200).json({
+                        status: 'success',
+                        message: 'Usuario creado correctamente'
+                    });
+                }).catch(err => console.log(err));
             }
-        }
-    });
+        });
+    })
 });
 
 module.exports = router;
