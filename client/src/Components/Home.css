@@ -1,5 +1,5 @@
 body{
-  background-color: #32797F;
+  background-color: #1f2222;
 }
 
 .header{
@@ -33,9 +33,17 @@ body{
 
 .link:hover{
   background-color: #fff;
-  color: #32797F;
+  color: #565858;
 }
 
 .chat{
   font-size: 2em;
+}
+
+main{
+  width: 100%;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
