@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Home.css';
+import Chat1 from './Home/Chat1';
 
 function Home() {
     return (
@@ -13,7 +14,7 @@ function Home() {
                 </nav>
             </header>
             <main>
-                
+                <Chat1 className="chat-1" />
             </main>
         </>
     )
