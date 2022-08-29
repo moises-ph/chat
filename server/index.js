@@ -8,6 +8,9 @@ const mongoose = require('./database');
 
 const SocketIO = require('socket.io');
 
+const {verifyToken} = require('./utils');
+const ioHandler = require('./Io')
+
 require('dotenv').config();
 
 app.use(cors());
@@ -21,6 +24,18 @@ const server = app.listen(app.get('port'), () => {
 });
 
 const io = SocketIO(server);
+
+io.use( async (socket, next)=>{
+    const token = socket.request.headers.token;
+
+    try{
+        const decoded = await verifyToken(token);
+        socket.decoded = decoded;
+        next();
+    }catch (err){
+        next(new Error('Authentication error'));
+    }
+}, ioHandler(io));
 
 // Routers
 const loginRouter = require('./routers/login');
