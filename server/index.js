@@ -38,8 +38,7 @@ io.use( async (socket, next)=>{
 }, ioHandler(io));
 
 // Routers
-const loginRouter = require('./routers/login');
-const registerRouter = require('./routers/register');
+const { loginRouter, registerRouter } = require('./routers');
 
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);

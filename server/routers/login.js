@@ -9,7 +9,7 @@ const validateLogin = Joi.object({
     password: Joi.string().required()
 })
 
-const User = require('../models/userModel');
+const { User } = require('../models');
 
 require('dotenv').config();
 
